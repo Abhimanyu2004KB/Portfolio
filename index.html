@@ -1,1 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhimanyu KB | Software Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --bg-light: #111111;
+            --text-main: #ffffff;
+            --text-dim: #8a8a93;
+            --stark-red: #e63946; 
+            --stark-red-glow: rgba(230, 57, 70, 0.3);
+            --arc-cyan: #00e5ff;  
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-attachment: fixed;
+        }
+
+        /* --- Ambient Smoke Background --- */
+        .ambient-smoke-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.6;
+        }
+
+        .smoke {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: drift 20s infinite alternate ease-in-out;
+        }
+
+        .smoke-1 {
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(230, 57, 70, 0.08) 0%, transparent 60%);
+            top: -10%; left: -10%;
+        }
+
+        .smoke-2 {
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.06) 0%, transparent 60%);
+            bottom: -10%; right: -10%;
+            animation-duration: 25s;
+            animation-direction: alternate-reverse;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, 5%) scale(0.9); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .logo {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+        .logo span { color: var(--stark-red); }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--arc-cyan); text-shadow: 0 0 10px var(--arc-cyan); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 120vh; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1000px; 
+            z-index: 2;
+        }
+
+        /* Cinematic Load Animation for the Name */
+        .hero-title-container {
+            position: absolute;
+            top: 45%; left: 50%;
+            text-align: center;
+            z-index: 1;
+            width: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            
+            /* Initial state for animation */
+            opacity: 0;
+            filter: blur(20px);
+            transform: translate(-50%, -35%) scale(0.85);
+            animation: titleEntry 2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        @keyframes titleEntry {
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .hero-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 8vw;
+            line-height: 1;
+            text-transform: uppercase;
+            white-space: nowrap;
+            will-change: transform, letter-spacing, opacity;
+        }
+
+        .title-top {
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+        }
+        .title-bottom {
+            color: #fff;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .hero-image-wrapper {
+            position: absolute;
+            bottom: 0;
+            width: 45vw;
+            max-width: 550px;
+            height: 75vh;
+            z-index: 2;
+            transform-style: preserve-3d;
+            transform-origin: bottom center;
+            will-change: transform;
+        }
+
+        /* Cinematic Load Animation for the Photo */
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(20,20,20,0.8) 0%, var(--bg-dark) 100%);
+            border: 1px solid var(--glass-border);
+            border-bottom: none;
+            border-radius: 250px 250px 0 0; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            background-image: url('/Abhi2.png');
+            background-size: cover;
+            background-position: top center;
+            box-shadow: inset 0 20px 50px rgba(0,0,0,0.5), 0 -10px 40px rgba(230, 57, 70, 0.1);
+            
+            /* Initial state for animation */
+            opacity: 0;
+            filter: blur(15px);
+            transform: translateY(100px);
+            animation: imageEntry 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+        }
+
+        @keyframes imageEntry {
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 35%;
+            background: linear-gradient(to top, var(--bg-dark) 10%, transparent);
+        }
+
+        /* --- MODERN SMOKE/BLUR REVEAL ANIMATIONS (SCROLL) --- */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(120px) scale(0.9);
+            filter: blur(20px); 
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity, filter;
+        }
+
+        .reveal-element.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.25s; }
+        .delay-3 { transition-delay: 0.4s; }
+        .delay-4 { transition-delay: 0.55s; }
+
+        /* BENTO LAYOUT */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 5%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 70px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-main);
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        .section-header span { color: var(--stark-red); }
+        .section-header::after {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(90deg, rgba(230, 57, 70, 0.5), transparent);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .bento-card {
+            background: rgba(15, 15, 15, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .bento-card.active:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(230, 57, 70, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(230, 57, 70, 0.05);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(0, 229, 255, 0.05), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+        .bento-card:hover::before { opacity: 1; }
+
+        .span-2 { grid-column: span 2; }
+        .span-3 { grid-column: span 3; }
+
+        .bento-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
+
+        .bento-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dim);
+        }
+
+        .highlight { color: var(--arc-cyan); font-weight: 500; text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); }
+        
+        .contact-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            color: var(--text-dim);
+        }
+        .contact-list li { display: flex; align-items: center; gap: 10px; transition: color 0.3s ease; }
+        .contact-list li:hover { color: var(--text-main); }
+        .contact-list span { color: var(--stark-red); font-family: 'Syncopate', sans-serif; font-size: 0.8rem; }
+
+        .cert-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .cert-item {
+            border-left: 2px solid var(--arc-cyan);
+            padding-left: 15px;
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0.05), transparent);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            transition: transform 0.3s ease;
+        }
+        .cert-item:hover { transform: translateX(10px); border-left-color: var(--stark-red); background: linear-gradient(90deg, rgba(230, 57, 70, 0.05), transparent); }
+        .cert-item h4 { color: var(--text-main); font-size: 1rem; margin-bottom: 8px; }
+        .cert-item p { color: var(--text-dim); font-size: 0.85rem; font-family: 'Syncopate', sans-serif; }
+        .cert-item p span { color: var(--stark-red); }
+
+        /* TECH PILLS */
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .tech-pill {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .tech-pill:hover {
+            background: rgba(0, 229, 255, 0.05);
+            border-color: var(--arc-cyan);
+            color: var(--arc-cyan);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        /* PROJECTS */
+        .projects-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .project-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            background: rgba(15, 15, 15, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .project-row.active:hover {
+            border-color: var(--stark-red);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(230, 57, 70, 0.3);
+            transform: translateY(-8px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-row.reverse { grid-template-columns: 1fr 1.2fr; }
+
+        .project-info { display: flex; flex-direction: column; }
+        .project-name {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+        
+        .project-visual {
+            background: var(--bg-dark);
+            border-radius: 20px;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .project-visual::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .project-row:hover .project-visual::after { opacity: 1; }
+
+        @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .span-2, .span-3 { grid-column: span 1; }
+            .cert-list { grid-template-columns: 1fr; }
+            .hero-title { font-size: 12vw; }
+            .hero-image-wrapper { width: 70vw; }
+            .project-row, .project-row.reverse { grid-template-columns: 1fr; gap: 30px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-smoke-container">
+        <div class="smoke smoke-1"></div>
+        <div class="smoke smoke-2"></div>
+    </div>
+
+    <nav id="navbar">
+        <div class="logo">PORTFOLIO<span>.</span></div>
+        <div class="nav-links">
+            <a href="#about">Profile</a>
+            <a href="#skills">Developments</a>
+            <a href="#projects">Engineering</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-title-container">
+            <div class="hero-title title-bottom">ABHIMANYU KB</div>
+            <div class="hero-title title-top">---------------</div>
+        </div>
+        <div class="hero-image-wrapper">
+            <div class="hero-image"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section id="about" style="margin-bottom: 120px;">
+            <h2 class="section-header reveal-element"><span>01.</span>PROFILE</h2>
+            
+            <div class="bento-grid">
+                <div class="bento-card span-2 reveal-element delay-1">
+                    <h3 class="bento-title">About me</h3>
+                    <p class="bento-text">
+                        A disciplined problem-solver and recent BCA Graduate from NIMIT (<span class="highlight">CGPA: 8.59</span>). I possess a solid foundation in programming, database management, and modern web technologies. I am eager to contribute my hands-on academic experience to a highly collaborative software engineering environment.
+                    </p>
+                </div>
+
+                <div class="bento-card reveal-element delay-2">
+                    <h3 class="bento-title">Contact</h3>
+                    <ul class="contact-list">
+                        <li><span>MAIL</span> abhimanyu2004kb@gmail.com</li>
+                        <li><span>COMM</span> +91 9899310298</li>
+                        <li><span>LOC</span> Pariyaram, Thrissur</li>
+                    </ul>
+                </div>
+
+                <div class="bento-card span-3 reveal-element delay-3">
+                    <h3 class="bento-title">Official Certifications</h3>
+                    <div class="cert-list">
+                        <div class="cert-item">
+                            <h4>Python Programming Internship (Grade A)</h4>
+                            <p>ICT Academy of Kerala | <span>Mar 2025</span></p>
+                        </div>
+                        <div class="cert-item">
+                            <h4>Data Science & Excel Automation</h4>
+                            <p>Infosys Springboard | <span>Apr 2025</span></p>
+                        </div>
+                        <div class="cert-item">
+                            <h4>Cybersecurity Foundations</h4>
+                            <p>LinkedIn Learning | <span>May 2024</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-card span-3 reveal-element delay-4" id="skills">
+                    <h3 class="bento-title">Core Arsenal</h3>
+                    <div class="tech-list">
+                        <span class="tech-pill">Java</span>
+                        <span class="tech-pill">Python</span>
+                        <span class="tech-pill">C</span>
+                        <span class="tech-pill">PHP</span>
+                        <span class="tech-pill">JavaScript</span>
+                        <span class="tech-pill">SQL</span>
+                        <span class="tech-pill">MERN Stack</span>
+                        <span class="tech-pill">Flask</span>
+                        <span class="tech-pill">MySQL</span>
+                        <span class="tech-pill">MongoDB</span>
+                        <span class="tech-pill">Firebase</span>
+                        <span class="tech-pill">Git / GitHub</span>
+                        <span class="tech-pill">Linux</span>
+                        <span class="tech-pill">Android Studio</span>
+                        <span class="tech-pill">AI Tools</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-header reveal-element"><span>02.</span>Projects and Contributions</h2>
+            
+            <div class="projects-grid">
+                <div class="project-row reveal-element delay-1">
+                    <div class="project-info">
+                        <h3 class="project-name">CollegeHub (Final Year Project)</h3>
+                        <p class="bento-text">
+                            A Full Stack (React/Node) platform designed to bridge the gap between a student's academics and career trajectory, featuring robust AI integration and student welfare modules.
+                        </p>
+                    </div>
+                    <div class="project-visual" style="background-image: url('https://via.placeholder.com/800x600/0a0a0a/e63946?text=COLLEGEHUB');"></div>
+                </div>
+
+                <div class="project-row reverse reveal-element delay-2">
+                    <div class="project-visual" style="background-image: url('https://via.placeholder.com/800x600/0a0a0a/00e5ff?text=DIGITAL+VOTING');"></div>
+                    <div class="project-info">
+                        <h3 class="project-name">Digital Voting System (Prototype for college election)</h3>
+                        <p class="bento-text">
+                            A secure application developed using Python and Firebase for campus elections. Engineered to enforce strict single-vote policies through multi-layered authentication.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="project-row reveal-element delay-1">
+                    <div class="project-info">
+                        <h3 class="project-name">XAI in Cybersecurity Research (Review Paper)</h3>
+                        <p class="bento-text">
+                            Authored a comprehensive review paper on utilizing Explainable AI (XAI) to make AI-driven threat detection transparent. Focused on making complex security algorithms interpretable for human analysts.
+                        </p>
+                    </div>
+                    <div class="project-visual" style="background-image: url('https://via.placeholder.com/800x600/0a0a0a/e63946?text=RESEARCH+PAPER');"></div>
+                </div>
+                
+                <div class="project-row reverse reveal-element delay-2">
+                    <div class="project-visual" style="background-image: url('https://via.placeholder.com/800x600/0a0a0a/00e5ff?text=LAQSHYA+%26+LIBRARY');"></div>
+                    <div class="project-info">
+                        <h3 class="project-name">Campus </h3>
+                        <p class="bento-text" style="margin-bottom: 10px;">
+                            <span class="highlight">Laqshya '25:</span> A responsive portal built for college fest registrations, significantly reducing administrative overhead.
+                        </p>
+                        <p class="bento-text">
+                            <span class="highlight">Library Management System:</span> A Python Flask application designed for automated book tracking, checkout procedures, and inventory management.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. Hero 3D Parallax & Typography Engine ---
+        const imageWrapper = document.querySelector('.hero-image-wrapper');
+        const titleTop = document.querySelector('.title-top');
+        const titleBottom = document.querySelector('.title-bottom');
+        const navbar = document.getElementById('navbar');
+        
+        let scrollY = window.scrollY;
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateScrollEffects();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        function updateScrollEffects() {
+            let maxScroll = window.innerHeight;
+            let progress = Math.min(scrollY / maxScroll, 1);
+
+            // Navbar
+            if (scrollY > 50) {
+                navbar.style.backgroundColor = 'rgba(5, 5, 5, 0.8)';
+                navbar.style.borderColor = 'var(--glass-border)';
+            } else {
+                navbar.style.backgroundColor = 'transparent';
+                navbar.style.borderColor = 'transparent';
+            }
+
+            // Image 3D Tilt
+            let rotateX = progress * 40; 
+            let scale = 1 - (progress * 0.15);
+            let translateY = scrollY * 0.3; 
+            
+            imageWrapper.style.transform = `translateY(${translateY}px) scale(${scale}) rotateX(${rotateX}deg)`;
+
+            // Typography split
+            let moveX = progress * 100; 
+            let spacing = progress * 15; 
+            
+            titleTop.style.transform = `translateX(${-moveX}px)`;
+            titleTop.style.letterSpacing = `${spacing}px`;
+            titleTop.style.webkitTextStroke = `${1 - progress}px rgba(255,255,255,${0.3 - progress*0.3})`;
+            
+            titleBottom.style.transform = `translateX(${moveX}px)`;
+            titleBottom.style.letterSpacing = `${spacing}px`;
+            titleBottom.style.opacity = 1 - progress;
+        }
+        
+        // Initialize Hero on load
+        updateScrollEffects();
+
+        // --- 2. Advanced Smoke Clearing Scroll Observer ---
+        const revealElements = document.querySelectorAll('.reveal-element');
+        
+        // We trigger the animation when the element is 10% into the viewport
+        const revealOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -10% 0px" 
+        };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    // Add active class to trigger the CSS transition (scale, translate, blur removal)
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, revealOptions);
+
+        revealElements.forEach(element => {
+            revealOnScroll.observe(element);
+        });
+    </script>
+</body>
+</html>
